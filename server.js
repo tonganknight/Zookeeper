@@ -7,7 +7,11 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
+
+app.use(express.static('public')); //this added the css to our application. the HTML made the request, but since there was nothing to receive  on the serverside, it sent nothing back 
+
 const { animals } = require('./data/animals'); 
+
 
 
 function filterByQuery(query, animalsArray) {
@@ -113,9 +117,19 @@ function filterByQuery(query, animalsArray) {
       res.json(animal);
     }
   });
- 
-  
 
+  app.get('/', (req, res) => {// serves html to sever
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
+ 
+  app.get('/animals', (req, res) => {// this serves our animals html
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+  });
+
+ app.get('/zookeepers', (req, res) => { // this serves our zookeeps html
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+  });
+  
   app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
   });
